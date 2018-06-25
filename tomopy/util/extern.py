@@ -80,6 +80,7 @@ __all__ = ['c_shared_lib',
            'c_mlem',
            'c_osem',
            'c_ospml_hybrid',
+           'c_ospml_hybrid3',
            'c_ospml_quad',
            'c_pml_hybrid',
            'c_pml_quad',
@@ -409,6 +410,31 @@ def c_ospml_hybrid(tomo, center, recon, theta, **kwargs):
 
     LIB_TOMOPY.ospml_hybrid.restype = dtype.as_c_void_p()
     return LIB_TOMOPY.ospml_hybrid(
+            dtype.as_c_float_p(tomo),
+            dtype.as_c_int(dy),
+            dtype.as_c_int(dt),
+            dtype.as_c_int(dx),
+            dtype.as_c_float_p(center),
+            dtype.as_c_float_p(theta),
+            dtype.as_c_float_p(recon),
+            dtype.as_c_int(kwargs['num_gridx']),
+            dtype.as_c_int(kwargs['num_gridy']),
+            dtype.as_c_int(kwargs['num_iter']),
+            dtype.as_c_float_p(kwargs['reg_par']),
+            dtype.as_c_int(kwargs['num_block']),
+            dtype.as_c_float_p(kwargs['ind_block']))  # TODO: should be int?
+
+
+def c_ospml_hybrid3(tomo, center, recon, theta, **kwargs):
+    if len(tomo.shape) == 2:
+        # no y-axis (only one slice)
+        dy = 1
+        dt, dx = tomo.shape
+    else:
+        dy, dt, dx = tomo.shape
+
+    LIB_TOMOPY.ospml_hybrid3.restype = dtype.as_c_void_p()
+    return LIB_TOMOPY.ospml_hybrid3(
             dtype.as_c_float_p(tomo),
             dtype.as_c_int(dy),
             dtype.as_c_int(dt),

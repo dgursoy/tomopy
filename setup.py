@@ -73,6 +73,7 @@ tomoc = Extension(
         'src/mlem.c',
         'src/osem.c',
         'src/ospml_hybrid.c',
+        'src/ospml_hybrid3.c',
         'src/ospml_quad.c',
         'src/pml_hybrid.c',
         'src/pml_quad.c',

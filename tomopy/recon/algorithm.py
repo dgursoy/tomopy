@@ -229,6 +229,8 @@ def recon(
                  'num_block', 'ind_block'],
         'ospml_hybrid': ['num_gridx', 'num_gridy', 'num_iter',
                          'reg_par', 'num_block', 'ind_block'],
+        'ospml_hybrid3': ['num_gridx', 'num_gridy', 'num_iter',
+                         'reg_par', 'num_block', 'ind_block'],
         'ospml_quad': ['num_gridx', 'num_gridy', 'num_iter',
                        'reg_par', 'num_block', 'ind_block'],
         'pml_hybrid': ['num_gridx', 'num_gridy', 'num_iter', 'reg_par'],
@@ -334,6 +336,8 @@ def _get_func(algorithm):
         func = extern.c_osem
     elif algorithm == 'ospml_hybrid':
         func = extern.c_ospml_hybrid
+    elif algorithm == 'ospml_hybrid3':
+        func = extern.c_ospml_hybrid3
     elif algorithm == 'ospml_quad':
         func = extern.c_ospml_quad
     elif algorithm == 'pml_hybrid':

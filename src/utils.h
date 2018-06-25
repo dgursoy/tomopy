@@ -198,6 +198,22 @@ ospml_hybrid(
     const float *ind_block);
 
 void DLL
+ospml_hybrid3(
+    const float *data,
+    int dy, 
+    int dt,
+    int dx,
+    const float *center,
+    const float *theta,
+    float *recon,
+    int ngridx,
+    int ngridy,
+    int num_iter,
+    const float *reg_pars,
+    int num_block,
+    const float *ind_block);
+
+void DLL
 ospml_quad(
     const float *data,
     int dy, 
