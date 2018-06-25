@@ -108,6 +108,21 @@ project3(
     const float *theta,
     int axis);
 
+void DLL
+project_fly_rotation(
+    const float *obj,
+    int oy,
+    int ox, 
+    int oz,
+    float *data,
+    int dy, 
+    int dt,
+    int dx,
+    const float *center,
+    const float *theta,
+    int bin,
+    int *mask);
+
 
 // Reconstruction algorithms
 
@@ -123,6 +138,21 @@ art(
     int ngridx,
     int ngridy,
     int num_iter);
+
+void DLL
+art_fly_rotation(
+    const float *data,
+    int dy, 
+    int dt,
+    int dx,
+    const float *center,
+    const float *theta,
+    float *recon,
+    int ngridx,
+    int ngridy,
+    int num_iter,
+    int bin,
+    int *mask);
 
 void DLL
 bart(
@@ -269,6 +299,20 @@ sirt(
     int ngridx,
     int ngridy,
     int num_iter);
+
+void DLL
+sirt_fly_rotation(
+    const float *data,
+    int dy, 
+    int dt,
+    int dx,
+    const float *center,
+    const float *theta,
+    float *recon,
+    int ngridx,
+    int ngridy,
+    int num_iter,
+    int bin);
 
 void DLL
 vector(

@@ -220,6 +220,7 @@ def recon(
 
     allowed_kwargs = {
         'art': ['num_gridx', 'num_gridy', 'num_iter'],
+        'art_fly_rotation': ['num_gridx', 'num_gridy', 'num_iter', 'bin', 'mask'],
         'bart': ['num_gridx', 'num_gridy', 'num_iter',
                  'num_block', 'ind_block'],
         'fbp': ['num_gridx', 'num_gridy', 'filter_name', 'filter_par'],
@@ -236,6 +237,7 @@ def recon(
         'pml_hybrid': ['num_gridx', 'num_gridy', 'num_iter', 'reg_par'],
         'pml_quad': ['num_gridx', 'num_gridy', 'num_iter', 'reg_par'],
         'sirt': ['num_gridx', 'num_gridy', 'num_iter'],
+        'sirt_fly_rotation': ['num_gridx', 'num_gridy', 'num_iter', 'bin'],
     }
 
     generic_kwargs = ['num_gridx', 'num_gridy', 'options']
@@ -324,6 +326,8 @@ def _init_recon(shape, init_recon, val=1e-6, sharedmem=True):
 def _get_func(algorithm):
     if algorithm == 'art':
         func = extern.c_art
+    elif algorithm == 'art_fly_rotation':
+        func = extern.c_art_fly_rotation
     elif algorithm == 'bart':
         func = extern.c_bart
     elif algorithm == 'fbp':
@@ -346,6 +350,8 @@ def _get_func(algorithm):
         func = extern.c_pml_quad
     elif algorithm == 'sirt':
         func = extern.c_sirt
+    elif algorithm == 'sirt_fly_rotation':
+        func = extern.c_sirt_fly_rotation
     else:
         func = algorithm
     return func
@@ -383,4 +389,6 @@ def _get_algorithm_kwargs(shape):
         'num_block': dtype.as_int32(1),
         'ind_block': np.arange(0, dt, dtype=np.float32),  # TODO: I think this should be int
         'options': {},
+        'bin': 1,
+        'mask': np.ones(1, dtype='int32'), 
     }
