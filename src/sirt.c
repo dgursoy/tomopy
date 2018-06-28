@@ -193,7 +193,7 @@ void
 sirt_fly_rotation(
     const float *data, int dy, int dt, int dx,
     const float *center, const float *theta,
-    float *recon, int ngridx, int ngridy, int num_iter, int bin)
+    float *recon, int ngridx, int ngridy, int num_iter, int bin, int *mask)
 {
     float *gridx = (float *)malloc((ngridx+1)*sizeof(float));
     float *gridy = (float *)malloc((ngridy+1)*sizeof(float));
@@ -257,92 +257,94 @@ sirt_fly_rotation(
                     // For each bin
                     for (b=0; b<bin; b++)
                     {
+                        if (mask[b]==1) {
+                            // Calculate coordinates
+                            xi = -ngridx-ngridy;
+                            yi = (1-dx)/2.0+d+mov+b-0.5*bin;
 
-                        // Calculate coordinates
-                        xi = -ngridx-ngridy;
-                        yi = (1-dx)/2.0+d+mov+b-0.5*bin;
+                            calc_coords(
+                                ngridx, ngridy, xi, yi, sin_p, cos_p, gridx, gridy, 
+                                coordx, coordy);
 
-                        calc_coords(
-                            ngridx, ngridy, xi, yi, sin_p, cos_p, gridx, gridy, 
-                            coordx, coordy);
+                            // Merge the (coordx, gridy) and (gridx, coordy)
+                            trim_coords(
+                                ngridx, ngridy, coordx, coordy, gridx, gridy, 
+                                &asize, ax, ay, &bsize, bx, by);
 
-                        // Merge the (coordx, gridy) and (gridx, coordy)
-                        trim_coords(
-                            ngridx, ngridy, coordx, coordy, gridx, gridy, 
-                            &asize, ax, ay, &bsize, bx, by);
+                            // Sort the array of intersection points (ax, ay) and
+                            // (bx, by). The new sorted intersection points are 
+                            // stored in (coorx, coory). Total number of points 
+                            // are csize.
+                            sort_intersections(
+                                quadrant, asize, ax, ay, bsize, bx, by, 
+                                &csize, coorx, coory);
 
-                        // Sort the array of intersection points (ax, ay) and
-                        // (bx, by). The new sorted intersection points are 
-                        // stored in (coorx, coory). Total number of points 
-                        // are csize.
-                        sort_intersections(
-                            quadrant, asize, ax, ay, bsize, bx, by, 
-                            &csize, coorx, coory);
+                            // Calculate the distances (dist) between the 
+                            // intersection points (coorx, coory). Find the 
+                            // indices of the pixels on the reconstruction grid.
+                            calc_dist(
+                                ngridx, ngridy, csize, coorx, coory, 
+                                indi, dist);
 
-                        // Calculate the distances (dist) between the 
-                        // intersection points (coorx, coory). Find the 
-                        // indices of the pixels on the reconstruction grid.
-                        calc_dist(
-                            ngridx, ngridy, csize, coorx, coory, 
-                            indi, dist);
+                            // Calculate dist*dist
+                            for (n=0; n<csize-1; n++) 
+                            {
+                                sum_dist2 += dist[n]*dist[n];
+                                sum_dist[indi[n]] += dist[n];
+                            }
 
-                        // Calculate dist*dist
-                        for (n=0; n<csize-1; n++) 
-                        {
-                            sum_dist2 += dist[n]*dist[n];
-                            sum_dist[indi[n]] += dist[n];
-                        }
-
-                        if (sum_dist2 != 0.0)
-                        {
-                            // Calculate simdata 
-                            calc_simdata(s, p, d, ngridx, ngridy, dt, dx,
-                                csize, indi, dist, recon,
-                                simdata); // Output: simdata
+                            if (sum_dist2 != 0.0)
+                            {
+                                // Calculate simdata 
+                                calc_simdata(s, p, d, ngridx, ngridy, dt, dx,
+                                    csize, indi, dist, recon,
+                                    simdata); // Output: simdata
+                            }
                         }
                     }
 
                     // For each bin
                     for (b=0; b<bin; b++)
                     {
+                        if (mask[b]==1) {
+                            // Calculate coordinates
+                            xi = -ngridx-ngridy;
+                            yi = (1-dx)/2.0+d+mov+b-0.5*bin;
 
-                        // Calculate coordinates
-                        xi = -ngridx-ngridy;
-                        yi = (1-dx)/2.0+d+mov+b-0.5*bin;
+                            calc_coords(
+                                ngridx, ngridy, xi, yi, sin_p, cos_p, gridx, gridy, 
+                                coordx, coordy);
 
-                        calc_coords(
-                            ngridx, ngridy, xi, yi, sin_p, cos_p, gridx, gridy, 
-                            coordx, coordy);
+                            // Merge the (coordx, gridy) and (gridx, coordy)
+                            trim_coords(
+                                ngridx, ngridy, coordx, coordy, gridx, gridy, 
+                                &asize, ax, ay, &bsize, bx, by);
 
-                        // Merge the (coordx, gridy) and (gridx, coordy)
-                        trim_coords(
-                            ngridx, ngridy, coordx, coordy, gridx, gridy, 
-                            &asize, ax, ay, &bsize, bx, by);
+                            // Sort the array of intersection points (ax, ay) and
+                            // (bx, by). The new sorted intersection points are 
+                            // stored in (coorx, coory). Total number of points 
+                            // are csize.
+                            sort_intersections(
+                                quadrant, asize, ax, ay, bsize, bx, by, 
+                                &csize, coorx, coory);
 
-                        // Sort the array of intersection points (ax, ay) and
-                        // (bx, by). The new sorted intersection points are 
-                        // stored in (coorx, coory). Total number of points 
-                        // are csize.
-                        sort_intersections(
-                            quadrant, asize, ax, ay, bsize, bx, by, 
-                            &csize, coorx, coory);
+                            // Calculate the distances (dist) between the 
+                            // intersection points (coorx, coory). Find the 
+                            // indices of the pixels on the reconstruction grid.
+                            calc_dist(
+                                ngridx, ngridy, csize, coorx, coory, 
+                                indi, dist);
 
-                        // Calculate the distances (dist) between the 
-                        // intersection points (coorx, coory). Find the 
-                        // indices of the pixels on the reconstruction grid.
-                        calc_dist(
-                            ngridx, ngridy, csize, coorx, coory, 
-                            indi, dist);
-
-                        // Update
-                        if (sum_dist2 != 0.0) 
-                        {
-                            ind_data = d+p*dx+s*dt*dx;
-                            upd = (data[ind_data]-simdata[ind_data])/sum_dist2;
-                            for (n=0; n<csize-1; n++) 
+                            // Update
+                            if (sum_dist2 != 0.0) 
                             {
-                                // recon[indi[n]+s*ngridx*ngridy] += upd*dist[n];
-                                update[indi[n]] += upd*dist[n];
+                                ind_data = d+p*dx+s*dt*dx;
+                                upd = (data[ind_data]-simdata[ind_data])/sum_dist2;
+                                for (n=0; n<csize-1; n++) 
+                                {
+                                    // recon[indi[n]+s*ngridx*ngridy] += upd*dist[n];
+                                    update[indi[n]] += upd*dist[n];
+                                }
                             }
                         }
                     }

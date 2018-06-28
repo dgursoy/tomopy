@@ -312,7 +312,8 @@ sirt_fly_rotation(
     int ngridx,
     int ngridy,
     int num_iter,
-    int bin);
+    int bin,
+    int *mask);
 
 void DLL
 vector(

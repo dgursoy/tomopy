@@ -628,7 +628,8 @@ def c_sirt_fly_rotation(tomo, center, recon, theta, **kwargs):
             dtype.as_c_int(kwargs['num_gridx']),
             dtype.as_c_int(kwargs['num_gridy']),
             dtype.as_c_int(kwargs['num_iter']),
-            dtype.as_c_int(kwargs['bin']))
+            dtype.as_c_int(kwargs['bin']),
+            dtype.as_c_int_p(kwargs['mask']))
 
 
 def c_vector(tomo, center, recon1, recon2, theta, **kwargs):

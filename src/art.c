@@ -227,6 +227,7 @@ art_fly_rotation(
                 sum_dist = (float *)calloc((ngridx*ngridy), sizeof(float));
                 update = (float *)calloc((ngridx*ngridy), sizeof(float));
                 
+                // printf("p=%i\n", p);
                 // For each detector pixel
                 for (d=0; d<dx; d++) 
                 {
@@ -364,6 +365,7 @@ art_fly_rotation(
                     }
                 }
 
+                printf("p=%i\n", p);
                 free(sum_dist);
                 free(update);
             }

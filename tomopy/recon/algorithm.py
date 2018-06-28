@@ -237,7 +237,7 @@ def recon(
         'pml_hybrid': ['num_gridx', 'num_gridy', 'num_iter', 'reg_par'],
         'pml_quad': ['num_gridx', 'num_gridy', 'num_iter', 'reg_par'],
         'sirt': ['num_gridx', 'num_gridy', 'num_iter'],
-        'sirt_fly_rotation': ['num_gridx', 'num_gridy', 'num_iter', 'bin'],
+        'sirt_fly_rotation': ['num_gridx', 'num_gridy', 'num_iter', 'bin', 'mask'],
     }
 
     generic_kwargs = ['num_gridx', 'num_gridy', 'options']
