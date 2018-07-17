@@ -71,6 +71,8 @@ __all__ = ['c_shared_lib',
            'c_project2',
            'c_project3',
            'c_project_fly_rotation',
+           'c_project_fly_rotation_interlaced',
+           'c_project_fly_rotation_interlaced_reg',
            'c_normalize_bg',
            'c_remove_stripe_sf',
            'c_sample',
@@ -83,6 +85,7 @@ __all__ = ['c_shared_lib',
            'c_osem',
            'c_ospml_hybrid',
            'c_ospml_hybrid3',
+           'c_ospml_hybrid3_fly_rotation',
            'c_ospml_quad',
            'c_pml_hybrid',
            'c_pml_quad',
@@ -273,6 +276,43 @@ def c_project_fly_rotation(obj, center, tomo, theta, bin, mask):
     theta = np.tile(theta, 2)
     LIB_TOMOPY.project_fly_rotation.restype = dtype.as_c_void_p()
     LIB_TOMOPY.project_fly_rotation(
+        dtype.as_c_float_p(obj),
+        dtype.as_c_int(oy),
+        dtype.as_c_int(ox),
+        dtype.as_c_int(oz),
+        dtype.as_c_float_p(contiguous_tomo),
+        dtype.as_c_int(dy),
+        dtype.as_c_int(dt),
+        dtype.as_c_int(dx),
+        dtype.as_c_float_p(center),
+        dtype.as_c_float_p(theta), 
+        dtype.as_c_int(bin),
+        dtype.as_c_int_p(mask))
+    tomo[:] = contiguous_tomo[:]
+
+
+def c_project_fly_rotation_interlaced(obj, center, tomo, theta, bin, mask):
+    # TODO: we should fix this elsewhere...
+    # TOMO object must be contiguous for c function to work
+
+    contiguous_tomo = np.require(tomo, requirements="AC")
+    if len(obj.shape) == 2:
+        # no y-axis (only one slice)
+        oy = 1
+        ox, oz = obj.shape
+    else:
+        oy, ox, oz = obj.shape
+
+    if len(tomo.shape) == 2:
+        # no y-axis (only one slice)
+        dy = 1
+        dt, dx = tomo.shape
+    else:
+        dy, dt, dx = tomo.shape
+
+    theta = np.tile(theta, 2)
+    LIB_TOMOPY.project_fly_rotation_interlaced.restype = dtype.as_c_void_p()
+    LIB_TOMOPY.project_fly_rotation_interlaced(
         dtype.as_c_float_p(obj),
         dtype.as_c_int(oy),
         dtype.as_c_int(ox),
@@ -513,6 +553,87 @@ def c_ospml_hybrid3(tomo, center, recon, theta, **kwargs):
             dtype.as_c_float_p(kwargs['reg_par']),
             dtype.as_c_int(kwargs['num_block']),
             dtype.as_c_float_p(kwargs['ind_block']))  # TODO: should be int?
+
+
+def c_ospml_hybrid3_fly_rotation(tomo, center, recon, theta, **kwargs):
+    if len(tomo.shape) == 2:
+        # no y-axis (only one slice)
+        dy = 1
+        dt, dx = tomo.shape
+    else:
+        dy, dt, dx = tomo.shape
+
+    LIB_TOMOPY.ospml_hybrid3_fly_rotation.restype = dtype.as_c_void_p()
+    return LIB_TOMOPY.ospml_hybrid3_fly_rotation(
+            dtype.as_c_float_p(tomo),
+            dtype.as_c_int(dy),
+            dtype.as_c_int(dt),
+            dtype.as_c_int(dx),
+            dtype.as_c_float_p(center),
+            dtype.as_c_float_p(theta),
+            dtype.as_c_float_p(recon),
+            dtype.as_c_int(kwargs['num_gridx']),
+            dtype.as_c_int(kwargs['num_gridy']),
+            dtype.as_c_int(kwargs['num_iter']),
+            dtype.as_c_float_p(kwargs['reg_par']),
+            dtype.as_c_int(kwargs['num_block']),
+            dtype.as_c_float_p(kwargs['ind_block']),
+            dtype.as_c_int(kwargs['bin']),
+            dtype.as_c_int_p(kwargs['mask']))  # TODO: should be int?
+
+
+def c_ospml_hybrid3_fly_rotation_interlaced(tomo, center, recon, theta, **kwargs):
+    if len(tomo.shape) == 2:
+        # no y-axis (only one slice)
+        dy = 1
+        dt, dx = tomo.shape
+    else:
+        dy, dt, dx = tomo.shape
+
+    LIB_TOMOPY.ospml_hybrid3_fly_rotation_interlaced.restype = dtype.as_c_void_p()
+    return LIB_TOMOPY.ospml_hybrid3_fly_rotation_interlaced(
+            dtype.as_c_float_p(tomo),
+            dtype.as_c_int(dy),
+            dtype.as_c_int(dt),
+            dtype.as_c_int(dx),
+            dtype.as_c_float_p(center),
+            dtype.as_c_float_p(theta),
+            dtype.as_c_float_p(recon),
+            dtype.as_c_int(kwargs['num_gridx']),
+            dtype.as_c_int(kwargs['num_gridy']),
+            dtype.as_c_int(kwargs['num_iter']),
+            dtype.as_c_float_p(kwargs['reg_par']),
+            dtype.as_c_int(kwargs['num_block']),
+            dtype.as_c_float_p(kwargs['ind_block']),
+            dtype.as_c_int(kwargs['bin']),
+            dtype.as_c_int_p(kwargs['mask']))  # TODO: should be int?
+
+
+def c_ospml_hybrid3_fly_rotation_interlaced_reg(tomo, center, recon, theta, **kwargs):
+    if len(tomo.shape) == 2:
+        # no y-axis (only one slice)
+        dy = 1
+        dt, dx = tomo.shape
+    else:
+        dy, dt, dx = tomo.shape
+
+    LIB_TOMOPY.ospml_hybrid3_fly_rotation_interlaced_reg.restype = dtype.as_c_void_p()
+    return LIB_TOMOPY.ospml_hybrid3_fly_rotation_interlaced_reg(
+            dtype.as_c_float_p(tomo),
+            dtype.as_c_int(dy),
+            dtype.as_c_int(dt),
+            dtype.as_c_int(dx),
+            dtype.as_c_float_p(center),
+            dtype.as_c_float_p(theta),
+            dtype.as_c_float_p(recon),
+            dtype.as_c_int(kwargs['num_gridx']),
+            dtype.as_c_int(kwargs['num_gridy']),
+            dtype.as_c_int(kwargs['num_iter']),
+            dtype.as_c_float_p(kwargs['reg_par']),
+            dtype.as_c_int(kwargs['num_block']),
+            dtype.as_c_float_p(kwargs['ind_block']),
+            dtype.as_c_int(kwargs['bin']),
+            dtype.as_c_int_p(kwargs['mask']))  # TODO: should be int?
 
 
 def c_ospml_quad(tomo, center, recon, theta, **kwargs):

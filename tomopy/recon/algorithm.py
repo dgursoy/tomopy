@@ -232,6 +232,12 @@ def recon(
                          'reg_par', 'num_block', 'ind_block'],
         'ospml_hybrid3': ['num_gridx', 'num_gridy', 'num_iter',
                          'reg_par', 'num_block', 'ind_block'],
+        'ospml_hybrid3_fly_rotation': ['num_gridx', 'num_gridy', 'num_iter',
+                         'reg_par', 'num_block', 'ind_block', 'bin', 'mask'],
+        'ospml_hybrid3_fly_rotation_interlaced': ['num_gridx', 'num_gridy', 'num_iter',
+                         'reg_par', 'num_block', 'ind_block', 'bin', 'mask'],
+        'ospml_hybrid3_fly_rotation_interlaced_reg': ['num_gridx', 'num_gridy', 'num_iter',
+                         'reg_par', 'num_block', 'ind_block', 'bin', 'mask'],
         'ospml_quad': ['num_gridx', 'num_gridy', 'num_iter',
                        'reg_par', 'num_block', 'ind_block'],
         'pml_hybrid': ['num_gridx', 'num_gridy', 'num_iter', 'reg_par'],
@@ -342,6 +348,12 @@ def _get_func(algorithm):
         func = extern.c_ospml_hybrid
     elif algorithm == 'ospml_hybrid3':
         func = extern.c_ospml_hybrid3
+    elif algorithm == 'ospml_hybrid3_fly_rotation':
+        func = extern.c_ospml_hybrid3_fly_rotation
+    elif algorithm == 'ospml_hybrid3_fly_rotation_interlaced':
+        func = extern.c_ospml_hybrid3_fly_rotation_interlaced
+    elif algorithm == 'ospml_hybrid3_fly_rotation_interlaced_reg':
+        func = extern.c_ospml_hybrid3_fly_rotation_interlaced_reg
     elif algorithm == 'ospml_quad':
         func = extern.c_ospml_quad
     elif algorithm == 'pml_hybrid':

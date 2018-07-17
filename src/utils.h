@@ -123,6 +123,21 @@ project_fly_rotation(
     int bin,
     int *mask);
 
+void DLL
+project_fly_rotation_interlaced(
+    const float *obj,
+    int oy,
+    int ox, 
+    int oz,
+    float *data,
+    int dy, 
+    int dt,
+    int dx,
+    const float *center,
+    const float *theta,
+    int bin,
+    int *mask);
+
 
 // Reconstruction algorithms
 
@@ -242,6 +257,60 @@ ospml_hybrid3(
     const float *reg_pars,
     int num_block,
     const float *ind_block);
+
+void DLL
+ospml_hybrid3_fly_rotation(
+    const float *data,
+    int dy, 
+    int dt,
+    int dx,
+    const float *center,
+    const float *theta,
+    float *recon,
+    int ngridx,
+    int ngridy,
+    int num_iter,
+    const float *reg_pars,
+    int num_block,
+    const float *ind_block,
+    int bin,
+    int *mask);
+
+void DLL
+ospml_hybrid3_fly_rotation_interlaced(
+    const float *data,
+    int dy, 
+    int dt,
+    int dx,
+    const float *center,
+    const float *theta,
+    float *recon,
+    int ngridx,
+    int ngridy,
+    int num_iter,
+    const float *reg_pars,
+    int num_block,
+    const float *ind_block,
+    int bin,
+    int *mask);
+
+void DLL
+ospml_hybrid3_fly_rotation_interlaced_reg(
+    const float *data,
+    int dy, 
+    int dt,
+    int dx,
+    const float *center,
+    const float *theta,
+    float *recon,
+    int ngridx,
+    int ngridy,
+    int num_iter,
+    const float *reg_pars,
+    int num_block,
+    const float *ind_block,
+    int bin,
+    int *mask);
 
 void DLL
 ospml_quad(

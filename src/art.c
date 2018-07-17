@@ -365,14 +365,13 @@ art_fly_rotation(
                     }
                 }
 
-                printf("p=%i\n", p);
-                free(sum_dist);
-                free(update);
+                // printf("p=%i\n", p);
             }
-        }
-
-        free(simdata);
+        }  
     }
+    free(simdata);
+    free(sum_dist);
+    free(update);
     free(gridx);
     free(gridy);
     free(coordx);
